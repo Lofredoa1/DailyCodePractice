@@ -33,8 +33,67 @@ ball.shape("square")
 ball.color("white")
 ball.penup()
 ball.goto(0, 0)
+ball.dx = 0.5
+ball.dy = 0.5
+
+# Functions
+def paddle_a_up():
+    y = paddle_a.ycor()
+    y += 20
+    paddle_a.sety(y)
+    
+def paddle_a_down():
+    y = paddle_a.ycor()
+    y -= 20
+    paddle_a.sety(y)
+
+def paddle_b_up():
+    y = paddle_b.ycor()
+    y += 20
+    paddle_b.sety(y)
+    
+def paddle_b_down():
+    y = paddle_b.ycor()
+    y -= 20
+    paddle_b.sety(y)
+
+# Keyboard Bindings
+win.listen()
+win.onkeypress(paddle_a_up, "w")
+win.onkeypress(paddle_a_down, "s")
+win.onkeypress(paddle_b_up, "Up")
+win.onkeypress(paddle_b_down, "Down")
 
 # Main Game Loop
 while True:
     win.update()
 
+    # Ball Movement
+    ball.setx(ball.xcor() + ball.dx)
+    ball.sety(ball.ycor() + ball.dy)
+    
+    # Border Checking for Ball
+    if ball.ycor() > 290:
+        ball.sety(290)
+        ball.dy *= -1
+        
+    if ball.ycor() < -290:
+        ball.sety(-290)
+        ball.dy *= -1
+
+    if ball.xcor() > 390:
+        ball.goto(0,0)
+        ball.dx *= -1
+    
+    if ball.xcor() < -390:
+        ball.goto(0,0)
+        ball.dx *= -1
+
+    # Paddle and Ball Collisions
+    if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < paddle_b.ycor() + 40 and ball.ycor() > paddle_b.ycor() - 40):
+        ball.setx(340)
+        ball.dx *= -1
+        
+    if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < paddle_a.ycor() + 40 and ball.ycor() > paddle_a.ycor() - 40):
+        ball.setx(-340)
+        ball.dx *= -1
